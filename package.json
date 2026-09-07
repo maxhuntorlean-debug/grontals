@@ -3,16 +3,31 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
+    "build:client": "vite build",
+    "predeploy": "npm run build:client",
     "deploy": "wrangler deploy",
-    "dev": "wrangler dev",
+    "deploy:production": "npm run build:client && wrangler deploy --env production",
+    "dev:client": "vite build --watch",
+    "dev": "npm run build:client && wrangler dev",
     "start": "wrangler dev",
     "test": "vitest",
-    "cf-typegen": "wrangler types"
+    "typecheck": "tsc --noEmit -p tsconfig.json && tsc --noEmit -p tsconfig.client.json && tsc --noEmit -p test/tsconfig.json",
+    "cf-typegen": "wrangler types",
+    "db:migrate:local": "wrangler d1 migrations apply grontals-db --local",
+    "db:migrate:remote": "wrangler d1 migrations apply grontals-db --remote",
+    "db:seed:local": "wrangler d1 execute grontals-db --local --file=./scripts/seed.sql",
+    "db:seed:remote": "wrangler d1 execute grontals-db --remote --file=./scripts/seed.sql",
+    "db:backup": "node scripts/backup.mjs",
+    "db:create-admin": "node scripts/create-admin.mjs"
+  },
+  "dependencies": {
+    "zod": "^3.23.8"
   },
   "devDependencies": {
     "@cloudflare/vitest-plugin": "^1.0.0",
     "@types/node": "^26.4.1",
     "typescript": "^5.5.2",
+    "vite": "^6.0.0",
     "vitest": "~4.1.0",
     "wrangler": "^4.129.0"
   }

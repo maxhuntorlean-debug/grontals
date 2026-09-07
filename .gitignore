@@ -165,3 +165,16 @@ dist
 .env*
 !.env.example
 .wrangler/
+
+# D1 export dumps (may contain real customer/product data)
+backups/
+
+# Built from src/*.ts by `npm run build:client` (predeploy / dev script)
+public/main.js
+public/main.js.map
+public/admin.js
+public/admin.js.map
+
+# Transient file from scripts/create-admin.mjs (deleted on success; can be
+# left behind if the wrangler command fails mid-run)
+.create-admin.tmp.sql

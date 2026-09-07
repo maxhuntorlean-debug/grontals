@@ -5,35 +5,107 @@
 {
 	"$schema": "node_modules/wrangler/config-schema.json",
 	"name": "grontals",
-	"main": "src/index.ts",
+	"main": "worker/index.ts",
 	"compatibility_date": "2026-09-03",
 	"observability": {
 		"enabled": true
 	},
-	"upload_source_maps": true
+	"upload_source_maps": true,
+	/**
+	 * D1 database (products, product_images, product_specs, admin_users).
+	 * Create it with: npx wrangler d1 create grontals-db
+	 * Then paste the returned database_id below.
+	 */
+	"d1_databases": [
+		{
+			"binding": "DB",
+			"database_name": "grontals-db",
+			"database_id": "REPLACE_WITH_D1_DATABASE_ID"
+		}
+	],
+	/**
+	 * Public (non-secret) site config. Real secrets (admin password hash, etc.)
+	 * use `wrangler secret put` instead.
+	 *
+	 * This deploys as a Worker with Static Assets (not Cloudflare Pages), so
+	 * the default staging URL is `https://grontals.<your-subdomain>.workers.dev`
+	 * — `wrangler deploy` prints the real one on first deploy. Update
+	 * PUBLIC_SITE_URL below to match it (exact casing/subdomain) so canonical
+	 * links, sitemap.xml and JSON-LD aren't wrong.
+	 *
+	 * DISALLOW_INDEXING="true" here is the safe default for that staging URL.
+	 * It's flipped to "false" in env.production below (see the production
+	 * PUBLIC_SITE_URL comment) — deploy with `wrangler deploy --env production`
+	 * once the real domain is live, not a plain `wrangler deploy`, or the
+	 * production site stays deindexed.
+	 */
+	"vars": {
+		"ORDER_PHONE_NUMBER": "+47 000 00 000",
+		"PUBLIC_SITE_URL": "https://grontals.YOUR-SUBDOMAIN.workers.dev",
+		"DISALLOW_INDEXING": "true",
+		"GA4_MEASUREMENT_ID": "",
+		"GSC_VERIFICATION_META": ""
+	},
+	/**
+	 * Static assets (client-side progressive-enhancement script, favicon, etc.).
+	 * Served directly by Cloudflare when a request matches a file here; every
+	 * other request falls through to the Worker's fetch handler.
+	 */
+	"assets": {
+		"directory": "./public/",
+		"binding": "ASSETS"
+	},
+	/**
+	 * R2 bucket for product photos, proxied through GET /images/:key.
+	 * Create it with: npx wrangler r2 bucket create grontals-product-images
+	 */
+	"r2_buckets": [
+		{
+			"binding": "PRODUCT_IMAGES",
+			"bucket_name": "grontals-product-images"
+		}
+	],
+	/**
+	 * Production environment: `npx wrangler deploy --env production`.
+	 * This is one store with one database, just reachable at two URLs — so
+	 * `d1_databases`/`r2_buckets` are repeated here identically (Wrangler's
+	 * type generator only guarantees a binding is non-optional in `Env` when
+	 * every named environment declares it explicitly; "inherited from the
+	 * top level" isn't enough for that check even though it works at
+	 * runtime). `assets` doesn't need repeating — only resource bindings
+	 * with an id do. `vars` also can't be inherited: redeclare in full.
+	 * Replace PUBLIC_SITE_URL with the real domain once DNS is live; see the
+	 * README "domain checklist" before doing so.
+	 */
+	"env": {
+		"production": {
+			"d1_databases": [
+				{
+					"binding": "DB",
+					"database_name": "grontals-db",
+					"database_id": "REPLACE_WITH_D1_DATABASE_ID"
+				}
+			],
+			"r2_buckets": [
+				{
+					"binding": "PRODUCT_IMAGES",
+					"bucket_name": "grontals-product-images"
+				}
+			],
+			"vars": {
+				"ORDER_PHONE_NUMBER": "+47 000 00 000",
+				"PUBLIC_SITE_URL": "https://xn--grntals-r1a.no",
+				"DISALLOW_INDEXING": "false",
+				"GA4_MEASUREMENT_ID": "",
+				"GSC_VERIFICATION_META": ""
+			}
+		}
+	}
 	/**
 	 * Smart Placement
 	 * https://developers.cloudflare.com/workers/configuration/smart-placement/#smart-placement
 	 */
 	// "placement": {  "mode": "smart" }
-	/**
-	 * Bindings
-	 * Bindings allow your Worker to interact with resources on the Cloudflare Developer Platform, including
-	 * databases, object storage, AI inference, real-time communication and more.
-	 * https://developers.cloudflare.com/workers/runtime-apis/bindings/
-	 */
-	/**
-	 * Environment Variables
-	 * https://developers.cloudflare.com/workers/wrangler/configuration/#environment-variables
-	 * Note: Use secrets to store sensitive data.
-	 * https://developers.cloudflare.com/workers/configuration/secrets/
-	 */
-	// "vars": {  "MY_VARIABLE": "production_value" }
-	/**
-	 * Static Assets
-	 * https://developers.cloudflare.com/workers/static-assets/binding/
-	 */
-	// "assets": {  "directory": "./public/",  "binding": "ASSETS" }
 	/**
 	 * Service Bindings (communicate between multiple Workers)
 	 * https://developers.cloudflare.com/workers/wrangler/configuration/#service-bindings

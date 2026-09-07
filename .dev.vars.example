@@ -1,0 +1,6 @@
+# Copy to .dev.vars for local `wrangler dev` / tests (never commit the real file).
+# In production, set with: npx wrangler secret put ADMIN_SESSION_SECRET
+
+# Random 32+ byte secret used to sign admin session cookies (HMAC-SHA256).
+# Generate one with: node -e "console.log(require('crypto').randomBytes(32).toString('hex'))"
+ADMIN_SESSION_SECRET=replace-with-a-random-32-byte-hex-string
