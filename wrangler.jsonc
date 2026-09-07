@@ -20,7 +20,7 @@
 		{
 			"binding": "DB",
 			"database_name": "grontals-db",
-			"database_id": "REPLACE_WITH_D1_DATABASE_ID"
+			"database_id": "f37c21c6-879a-4021-8cca-9822c731529e"
 		}
 	],
 	/**
@@ -98,7 +98,16 @@
 				"DISALLOW_INDEXING": "false",
 				"GA4_MEASUREMENT_ID": "",
 				"GSC_VERIFICATION_META": ""
-			}
+			},
+			/**
+			 * Attaches grøntals.no directly to this Worker (creates/manages the
+			 * DNS record and SSL cert automatically on deploy) — no manual
+			 * dashboard click needed.
+			 */
+			"routes": [
+				{ "pattern": "xn--grntals-r1a.no", "custom_domain": true },
+				{ "pattern": "www.xn--grntals-r1a.no", "custom_domain": true }
+			]
 		}
 	}
 	/**

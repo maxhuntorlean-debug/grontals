@@ -1,0 +1,16 @@
+{
+	"name": "GRØNTALS Admin",
+	"short_name": "GRØNTALS",
+	"description": "Administrer produkter og bilder for GRØNTALS.",
+	"start_url": "/admin",
+	"scope": "/admin",
+	"display": "standalone",
+	"background_color": "#faf8f4",
+	"theme_color": "#2f5233",
+	"lang": "nb",
+	"icons": [
+		{ "src": "/icons/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+		{ "src": "/icons/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+		{ "src": "/icons/icon-512-maskable.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+	]
+}

@@ -1,5 +1,6 @@
 import type { ProductDetail, ProductImage } from "../../../shared/types";
 import { ApiError, createProduct, deleteImage, deleteProduct, type ProductInput, updateImage, updateProduct, uploadImage } from "../api";
+import { confirmDialog } from "../confirm-dialog";
 import { escapeHtml } from "../html";
 import { resizeImageForUpload } from "../image-resize";
 
@@ -68,7 +69,10 @@ export function renderProductForm(root: HTMLElement, initialProduct: ProductDeta
 		return `
 			<header class="admin-header">
 				<strong>GRØNTALS admin</strong>
-				<button class="button button--secondary button--small" id="back-button" type="button">&larr; Tilbake til produkter</button>
+				<div class="admin-header__actions">
+					<a class="button button--secondary button--small" href="/" target="_blank" rel="noopener">Se nettsiden &#8599;</a>
+					<button class="button button--secondary button--small" id="back-button" type="button">&larr; Tilbake til produkter</button>
+				</div>
 			</header>
 			<div class="admin-container">
 				<div id="form-message"></div>
@@ -111,7 +115,7 @@ export function renderProductForm(root: HTMLElement, initialProduct: ProductDeta
 					<div class="admin-form-actions">
 						<button class="button" type="submit">Lagre</button>
 						<button class="button button--secondary" id="cancel-button" type="button">Avbryt</button>
-						${p ? '<button class="button button--danger" id="delete-product-button" type="button" style="margin-left:auto">Slett produkt</button>' : ""}
+						${p ? '<button class="button button--danger admin-form-actions__delete" id="delete-product-button" type="button">Slett produkt</button>' : ""}
 					</div>
 				</form>
 			</div>
@@ -246,7 +250,7 @@ export function renderProductForm(root: HTMLElement, initialProduct: ProductDeta
 
 	async function handleDeleteImage(imageId: number): Promise<void> {
 		if (!product) return;
-		if (!window.confirm("Slette dette bildet?")) return;
+		if (!(await confirmDialog("Slette dette bildet?"))) return;
 		try {
 			await deleteImage(imageId);
 			product.images = product.images.filter((image) => image.id !== imageId);
@@ -283,7 +287,7 @@ export function renderProductForm(root: HTMLElement, initialProduct: ProductDeta
 
 	async function handleDeleteProduct(): Promise<void> {
 		if (!product) return;
-		if (!window.confirm(`Slette "${product.name}"? Dette kan ikke angres.`)) return;
+		if (!(await confirmDialog(`Slette "${product.name}"? Dette kan ikke angres.`))) return;
 		try {
 			await deleteProduct(product.id);
 			callbacks.onDeleted();

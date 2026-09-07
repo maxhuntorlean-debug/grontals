@@ -9,6 +9,12 @@ if (root) {
 	void bootstrap(root);
 }
 
+if ("serviceWorker" in navigator) {
+	// Makes the admin panel installable as a PWA. Deliberately caches nothing
+	// beyond its own static files — see public/admin-sw.js.
+	navigator.serviceWorker.register("/admin-sw.js", { scope: "/admin" }).catch(() => {});
+}
+
 async function bootstrap(root: HTMLElement): Promise<void> {
 	try {
 		await checkSession();

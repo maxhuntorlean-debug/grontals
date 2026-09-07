@@ -3,8 +3,11 @@
  * on the client via <canvas> rather than paying for Cloudflare Images).
  * Falls back to JPEG if the browser can't encode WebP via canvas.
  */
-const MAX_DIMENSION = 1600;
-const QUALITY = 0.85;
+// The largest on-site display slot for a product photo is the main gallery
+// image (~550px CSS width at most). 1200px covers that comfortably even at
+// 2x pixel density, without shipping resolution nothing on the site uses.
+const MAX_DIMENSION = 1200;
+const QUALITY = 0.82;
 
 function supportsWebpEncoding(): boolean {
 	const canvas = document.createElement("canvas");

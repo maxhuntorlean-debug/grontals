@@ -1,6 +1,7 @@
 import type { Product } from "../../../shared/types";
 import { formatNok } from "../../../shared/format";
 import { deleteProduct, listProducts, logout } from "../api";
+import { confirmDialog } from "../confirm-dialog";
 import { escapeHtml } from "../html";
 
 export interface ProductListCallbacks {
@@ -26,7 +27,10 @@ export async function renderProductList(root: HTMLElement, callbacks: ProductLis
 		root.innerHTML = `
 			<header class="admin-header">
 				<strong>GRØNTALS admin</strong>
-				<button class="button button--secondary button--small" id="logout-button" type="button">Logg ut</button>
+				<div class="admin-header__actions">
+					<a class="button button--secondary button--small" href="/" target="_blank" rel="noopener">Se nettsiden &#8599;</a>
+					<button class="button button--secondary button--small" id="logout-button" type="button">Logg ut</button>
+				</div>
 			</header>
 			<div class="admin-container">
 				<div class="admin-toolbar">
@@ -55,7 +59,7 @@ export async function renderProductList(root: HTMLElement, callbacks: ProductLis
 	async function handleDelete(id: number, button: HTMLButtonElement): Promise<void> {
 		const product = products.find((p) => p.id === id);
 		if (!product) return;
-		if (!window.confirm(`Slette "${product.name}"? Dette kan ikke angres.`)) return;
+		if (!(await confirmDialog(`Slette "${product.name}"? Dette kan ikke angres.`))) return;
 
 		button.disabled = true;
 		try {
@@ -95,13 +99,13 @@ function renderTable(items: Product[]): string {
 function renderRow(product: Product): string {
 	return `
 		<tr>
-			<td class="wrap">${escapeHtml(product.name)}</td>
-			<td>${escapeHtml(product.slug)}</td>
-			<td>${formatNok(product.price)}</td>
-			<td><span class="status-pill ${product.inStock ? "status-pill--on" : "status-pill--off"}">${product.inStock ? "På lager" : "Utsolgt"}</span></td>
-			<td><span class="status-pill ${product.isActive ? "status-pill--on" : "status-pill--off"}">${product.isActive ? "Synlig" : "Skjult"}</span></td>
-			<td>${product.sortOrder}</td>
-			<td>
+			<td class="wrap" data-label="Navn">${escapeHtml(product.name)}</td>
+			<td data-label="Slug">${escapeHtml(product.slug)}</td>
+			<td data-label="Pris">${formatNok(product.price)}</td>
+			<td data-label="Lager"><span class="status-pill ${product.inStock ? "status-pill--on" : "status-pill--off"}">${product.inStock ? "På lager" : "Utsolgt"}</span></td>
+			<td data-label="Synlig"><span class="status-pill ${product.isActive ? "status-pill--on" : "status-pill--off"}">${product.isActive ? "Synlig" : "Skjult"}</span></td>
+			<td data-label="Sortering">${product.sortOrder}</td>
+			<td data-label="">
 				<div class="admin-table__actions">
 					<button class="button button--secondary button--small" type="button" data-edit-id="${product.id}">Rediger</button>
 					<button class="button button--danger button--small" type="button" data-delete-id="${product.id}">Slett</button>

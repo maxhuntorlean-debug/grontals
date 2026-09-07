@@ -11,7 +11,6 @@ export interface ProductPageData {
 export function renderProductContent({ product, phone }: ProductPageData): string {
 	const gallery = product.images.length > 0 ? product.images : null;
 	const mainImageSrc = gallery ? productImageUrl(gallery[0].r2Key) : productImageUrl(product.mainImageKey);
-	const thumbs = gallery && gallery.length > 1 ? gallery.slice(1) : [];
 
 	const metaRows: [string, string][] = [
 		product.sku ? ["Artikkelnummer", product.sku] : null,
@@ -33,15 +32,17 @@ export function renderProductContent({ product, phone }: ProductPageData): strin
 	<div class="container product-page" id="product-main">
 		<div class="product-gallery">
 			<div class="product-gallery__main">
-				<img src="${escapeHtml(mainImageSrc)}" alt="${escapeHtml(product.name)}" width="700" height="700">
+				<img id="main-product-image" src="${escapeHtml(mainImageSrc)}" alt="${escapeHtml(product.name)}" width="700" height="700">
 			</div>
 			${
-				thumbs.length > 0
+				gallery && gallery.length > 1
 					? `<div class="product-gallery__thumbs">
-				${thumbs
+				${gallery
 					.map(
-						(img) =>
-							`<img src="${escapeHtml(productImageUrl(img.r2Key))}" alt="${escapeHtml(img.altText ?? product.name)}" loading="lazy" width="72" height="72">`,
+						(img, index) =>
+							`<button type="button" class="product-gallery__thumb${index === 0 ? " is-active" : ""}" data-full-src="${escapeHtml(productImageUrl(img.r2Key))}" aria-label="Vis bilde ${index + 1} av ${gallery.length}">
+					<img src="${escapeHtml(productImageUrl(img.r2Key))}" alt="" loading="lazy" width="72" height="72">
+				</button>`,
 					)
 					.join("\n\t\t\t\t")}
 			</div>`

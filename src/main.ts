@@ -8,6 +8,7 @@
 
 initCatalogFilter();
 initProductOverlay();
+initProductGallery(document);
 
 function initCatalogFilter(): void {
 	const catalog = document.getElementById("catalog");
@@ -85,6 +86,7 @@ function initProductOverlay(): void {
 		}
 
 		contentEl.innerHTML = main.innerHTML;
+		initProductGallery(contentEl);
 		if (doc.title) document.title = doc.title;
 		overlay.hidden = false;
 		document.body.style.overflow = "hidden";
@@ -141,6 +143,21 @@ function initProductOverlay(): void {
 			if (!overlay.hidden) closeOverlay();
 		}
 	});
+}
+
+function initProductGallery(root: ParentNode): void {
+	const mainImage = root.querySelector("#main-product-image");
+	if (!(mainImage instanceof HTMLImageElement)) return;
+
+	const thumbs = Array.from(root.querySelectorAll<HTMLButtonElement>(".product-gallery__thumb"));
+	for (const thumb of thumbs) {
+		thumb.addEventListener("click", () => {
+			const src = thumb.dataset.fullSrc;
+			if (!src) return;
+			mainImage.src = src;
+			for (const other of thumbs) other.classList.toggle("is-active", other === thumb);
+		});
+	}
 }
 
 function trapFocus(event: KeyboardEvent, container: HTMLElement): void {

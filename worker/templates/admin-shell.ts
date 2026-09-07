@@ -16,6 +16,10 @@ export function renderAdminShell(): string {
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<title>Admin – GRØNTALS</title>
 	<meta name="robots" content="noindex, nofollow">
+	<link rel="manifest" href="/manifest.webmanifest">
+	<meta name="theme-color" content="#2f5233">
+	<link rel="apple-touch-icon" href="/icons/icon-192.png">
+	<link rel="icon" href="/icons/icon-192.png">
 	<style>${CRITICAL_CSS}${ADMIN_CSS}</style>
 </head>
 <body>

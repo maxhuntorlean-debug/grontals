@@ -1,5 +1,25 @@
 # GRØNTALS.NO
 
+Nettbutikk-frontend for byggeklosser (LEGO-kompatible), bygget for det norske markedet. Ingen handlekurv eller nettbetaling — bestilling skjer på telefon. Live: **[grøntals.no](https://xn--grntals-r1a.no)**
+
+## Om prosjektet
+
+Et fullstack-prosjekt bygget fra bunnen av på Cloudflare sin edge-plattform — én TypeScript-monolitt (Cloudflare Worker) som håndterer server-rendering, et REST-API og en egen admin-SPA, uten noen ekstern backend eller separat hosting.
+
+**Nøkkelfunksjoner:**
+- **Server-rendert butikkvindu** (ikke SPA) for søkemotorindeksering og rask LCP — produktoverlegg via `history.pushState` som progressiv forbedring oppå vanlige `<a href>`-lenker, så alt fungerer uten JavaScript også.
+- **Admin-panel** (`/admin`) — egen liten SPA i vanilla TypeScript: produkt-CRUD, drag-and-drop bildeopplasting med automatisk klient-side komprimering (`<canvas>` → WebP), PWA (installerbar, service worker).
+- **Autentisering** — PBKDF2-hashede passord, HMAC-signerte sesjonscookies (stateless, ingen sesjonstabell), rate limiting mot brute-force på innloggingsendepunktet.
+- **SEO** — dynamisk `sitemap.xml`/`robots.txt`, canonical-lenker, Open Graph, JSON-LD (`Product`, `BreadcrumbList`, `Organization`).
+- **Sikkerhet** — Content-Security-Policy, egne security-headers på alle responser, Zod-validering av all inndata, prepared statements mot D1.
+- **Testet** — 56 automatiserte tester (Vitest + `@cloudflare/vitest-plugin`, kjører mot en ekte D1-instans) som dekker autentisering, filopplasting, SEO-output og security-headers.
+
+**Teknologier:** TypeScript, Cloudflare Workers, D1 (SQLite), R2 (objektlagring), Vite, Zod, Vitest — ingen frontend-rammeverk, kun vanilla TS.
+
+Koden under (README-instruksjonene) er skrevet på russisk, til butikkeieren som drifter siden — ikke en del av selve prosjektbeskrivelsen ovenfor.
+
+---
+
 Интернет-витрина блочных конструкторов для норвежского рынка. Без корзины и онлайн-оплаты — заказ по телефону. Технически это один Cloudflare Worker (TypeScript) с базой D1, хранилищем изображений R2 и небольшой админ-панелью на `/admin`.
 
 Эта инструкция написана для человека без опыта программирования. Все команды даны в готовом для копирования виде — просто вставляйте их в терминал по очереди.
