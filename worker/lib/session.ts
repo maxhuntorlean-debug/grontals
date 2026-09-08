@@ -1,6 +1,6 @@
 /** Stateless, HMAC-signed admin session cookie — no session table to manage or clean up. */
 const SESSION_COOKIE_NAME = "grontals_admin_session";
-const SESSION_TTL_SECONDS = 60 * 60 * 12; // 12h
+const SESSION_TTL_SECONDS = 60 * 60 * 24 * 30; // 30 days
 
 interface SessionPayload {
 	sub: number;
