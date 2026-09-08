@@ -40,7 +40,7 @@
 	 * production site stays deindexed.
 	 */
 	"vars": {
-		"ORDER_PHONE_NUMBER": "+47 000 00 000",
+		"ORDER_PHONE_NUMBER": "+47 486 85 686",
 		"PUBLIC_SITE_URL": "https://grontals.YOUR-SUBDOMAIN.workers.dev",
 		"DISALLOW_INDEXING": "true",
 		"GA4_MEASUREMENT_ID": "",
@@ -93,7 +93,7 @@
 				}
 			],
 			"vars": {
-				"ORDER_PHONE_NUMBER": "+47 000 00 000",
+				"ORDER_PHONE_NUMBER": "+47 486 85 686",
 				"PUBLIC_SITE_URL": "https://xn--grntals-r1a.no",
 				"DISALLOW_INDEXING": "false",
 				"GA4_MEASUREMENT_ID": "",

@@ -39,6 +39,14 @@ a { color: inherit; }
 }
 .skip-link:focus { left: 0.5rem; top: 0.5rem; border-radius: var(--radius); }
 
+.dev-banner {
+	background: #fff4e5;
+	color: #7a6633;
+	text-align: center;
+	font-size: 0.8rem;
+	padding: 0.4rem 1rem;
+}
+
 .site-header {
 	display: flex;
 	align-items: center;

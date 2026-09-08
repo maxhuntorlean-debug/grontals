@@ -87,6 +87,7 @@ export function renderLayout({
 </head>
 <body>
 	<a class="skip-link" href="#main-content">Hopp til innhold</a>
+	<div class="dev-banner">Nettsiden er under utvikling &mdash; bestilling på telefon fungerer allerede.</div>
 	<header class="site-header">
 		<a class="site-header__logo" href="/">GRØNTALS</a>
 		<nav class="site-nav" aria-label="Hovednavigasjon">
